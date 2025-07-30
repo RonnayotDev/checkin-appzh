@@ -247,6 +247,7 @@ export default function CheckinForm() {
         <div className="links-container">
           <a href={`/history?user=${encodeURIComponent(name)}`}>📄 ดูประวัติของฉัน</a>
           <a href="/admin">🛠️ เข้าสู่ระบบผู้ดูแล</a>
+           <a href="/summary">📊 ดูสรุปรายวัน</a>
         </div>
       </div>
     </>

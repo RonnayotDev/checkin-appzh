@@ -1,4 +1,4 @@
-'use client'
+'use client';
 import { useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 
@@ -8,30 +8,28 @@ export default function HistoryContent() {
   const [filtered, setFiltered] = useState<any[]>([]);
 
   useEffect(() => {
-    if (!user) return;
-    const storedData = localStorage.getItem('checkins');
-    const checkins = storedData ? JSON.parse(storedData) : [];
-    const filteredData = checkins.filter((item: any) => item.name === user);
-    setFiltered(filteredData);
+    const all = JSON.parse(localStorage.getItem('checkins') || '[]');
+    const result = all.filter((item: any) => item.name === user);
+    setFiltered(result);
   }, [user]);
 
-  if (!user) {
-    return <div>ไม่พบชื่อผู้ใช้งาน</div>;
-  }
+  if (!user) return <div>ไม่พบชื่อผู้ใช้</div>;
 
   return (
     <div style={{ padding: '1rem' }}>
-      <h1>ประวัติของ {user}</h1>
-      <ul style={{ listStyle: 'none', padding: 0 }}>
-        {filtered.map((item, index) => (
-          <li key={index} style={{ marginBottom: '1rem', background: '#eee', padding: '1rem', borderRadius: '8px' }}>
-            <div><strong>กิจกรรม:</strong> {item.activity}</div>
-            <div><strong>สถานะ:</strong> {item.status}</div>
-            <div><strong>เวลา:</strong> {item.timestamp}</div>
-            {item.image && <img src={item.image} alt="upload" width={100} style={{ marginTop: '0.5rem' }} />}
-          </li>
-        ))}
-      </ul>
+      <h2>📜 ประวัติของ {user}</h2>
+      {filtered.length === 0 ? <p>ยังไม่มีข้อมูล</p> :
+        <ul style={{ padding: 0, listStyle: 'none' }}>
+          {filtered.map((item, idx) => (
+            <li key={idx} style={{ marginBottom: '1rem', background: '#eee', padding: '1rem' }}>
+              <p><strong>กิจกรรม:</strong> {item.activity}</p>
+              <p><strong>สถานะ:</strong> {item.status}</p>
+              <p><strong>เวลา:</strong> {new Date(item.time).toLocaleString()}</p>
+              {item.image && <img src={item.image} width={200} />}
+            </li>
+          ))}
+        </ul>
+      }
     </div>
   );
 }

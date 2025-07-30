@@ -1,10 +1,10 @@
-'use client'
+'use client';
 import { Suspense } from 'react';
-import HistoryContent from './HistoryContent'; // หรือ '@/app/history/HistoryContent'
+import HistoryContent from './HistoryContent';
 
 export default function HistoryPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
+    <Suspense fallback={<div>กำลังโหลด...</div>}>
       <HistoryContent />
     </Suspense>
   );

@@ -15,7 +15,7 @@
   background: #1e1e1e;
   padding: 2rem;
   border-radius: 12px;
-  box-shadow: 0 0 20px rgba(0,0,0,0.4);
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
 }
 
 .title {
@@ -30,7 +30,9 @@
   gap: 1rem;
 }
 
-input, select {
+/* ✅ ใช้ input, select, button เฉพาะใน .form */
+.form input,
+.form select {
   padding: 0.5rem;
   border-radius: 6px;
   border: none;
@@ -38,7 +40,8 @@ input, select {
   color: white;
 }
 
-button {
+/* ✅ ปรับเฉพาะปุ่มใน form */
+.form button {
   background-color: #22c55e;
   color: white;
   padding: 0.7rem;
@@ -48,6 +51,6 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+.form button:hover {
   background-color: #16a34a;
 }

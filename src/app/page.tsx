@@ -104,11 +104,11 @@ localStorage.setItem("checkins", JSON.stringify([newData, ...existingData]));
 
           <button type="submit">📤 ส่งข้อมูล Check-in</button>
         </form>
+        <a href="/history" style={{ color: "#4ade80", marginTop: "1rem", display: "inline-block" }}>
+  ดูประวัติการ Check-in →
+</a>
       </main>
     </div>
   );
 }
-<a href="/history" style={{ color: "#4ade80", marginTop: "1rem", display: "inline-block" }}>
-  ดูประวัติการ Check-in →
-</a>
 

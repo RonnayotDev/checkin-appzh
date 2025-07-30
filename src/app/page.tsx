@@ -104,8 +104,8 @@ localStorage.setItem("checkins", JSON.stringify([newData, ...existingData]));
 
           <button type="submit">📤 ส่งข้อมูล Check-in</button>
         </form>
-        <a href="/history" style={{ color: "#4ade80", marginTop: "1rem", display: "inline-block" }}>
-  ดูประวัติการ Check-in →
+      <a href="/admin" style={{ color: "#facc15", marginTop: "1rem", display: "inline-block" }}>
+  เข้าสู่ระบบ Admin →
 </a>
       </main>
     </div>

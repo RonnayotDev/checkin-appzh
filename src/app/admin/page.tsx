@@ -1,72 +1,51 @@
-// pages/admin.tsx
-"use client"
+"use client";
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 export default function AdminPage() {
-  const [checkins, setCheckins] = useState<any[]>([]);
-  const [authenticated, setAuthenticated] = useState(false);
+  const [records, setRecords] = useState<any[]>([]);
 
   useEffect(() => {
-    const password = prompt("กรุณาใส่รหัสผ่านเพื่อเข้าถึงหน้า Admin:");
-    if (password === "1234admin") { // ✅ เปลี่ยนรหัสผ่านตามที่ต้องการ
-      setAuthenticated(true);
-      const data = JSON.parse(localStorage.getItem('checkins') || '[]');
-      setCheckins(data);
-    } else {
-      alert("รหัสผ่านไม่ถูกต้อง");
-      window.location.href = "/"; // กลับหน้าแรกถ้ารหัสผิด
-    }
+    const allData = JSON.parse(localStorage.getItem("checkins") || "[]");
+    setRecords(allData);
   }, []);
 
-  const handleStatusChange = async (index: number, newStatus: string) => {
-    const updated = [...checkins];
+  const handleStatusChange = (index: number, newStatus: string) => {
+    const updated = [...records];
     updated[index].status = newStatus;
-    setCheckins(updated);
-    localStorage.setItem('checkins', JSON.stringify(updated));
-
-    const webhookUrl = "https://discord.com/api/webhooks/1400046836131299348/j2g_XnSCSQotXrbQsngY4pKFIFL5wMjetjqCShnugMYijMzcts3imUuo-QwAKPkyd3iD";
-
-    await fetch(webhookUrl, {
-      method: "POST",
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        content: `📢 สถานะ Check-in ของ ${updated[index].name} ถูกเปลี่ยนเป็น: **${newStatus}**\nกิจกรรม: ${updated[index].activity}`,
-      }),
-    });
-
-    alert('อัปเดตสถานะและส่งแจ้งเตือนแล้ว');
+    setRecords(updated);
+    localStorage.setItem("checkins", JSON.stringify(updated));
   };
 
-  if (!authenticated) {
-    return null; // ยังไม่แสดงอะไรจนกว่าจะผ่าน auth
-  }
-
   return (
-    <div style={{ padding: '2rem', fontFamily: 'sans-serif' }}>
-      <h1>📋 ระบบจัดการ Check-in (Admin)</h1>
-      {checkins.length === 0 ? (
+    <div style={{ padding: "2rem", color: "white", background: "#121212" }}>
+      <h1>🛠️ หน้าผู้ดูแลระบบ</h1>
+      {records.length === 0 ? (
         <p>ไม่มีข้อมูล Check-in</p>
       ) : (
-        checkins.map((item, index) => (
-          <div key={index} style={{ border: '1px solid #ccc', padding: '1rem', marginBottom: '1rem' }}>
-            <p><strong>ชื่อ:</strong> {item.name}</p>
-            <p><strong>กิจกรรม:</strong> {item.activity}</p>
-            <p><strong>สถานะ:</strong> {item.status}</p>
-            <img src={item.image} alt="check-in" style={{ maxWidth: '200px', marginTop: '1rem' }} />
-
-            <div style={{ marginTop: '1rem' }}>
-              <button onClick={() => handleStatusChange(index, 'อนุมัติแล้ว')} style={{ marginRight: '1rem', background: '#4ade80', padding: '0.5rem 1rem' }}>
-                ✅ อนุมัติ
-              </button>
-              <button onClick={() => handleStatusChange(index, 'ไม่อนุมัติ')} style={{ background: '#f87171', padding: '0.5rem 1rem' }}>
-                ❌ ไม่อนุมัติ
-              </button>
-            </div>
-          </div>
-        ))
+        <ul>
+          {records.map((item, index) => (
+            <li key={index} style={{ marginBottom: "1.5rem", borderBottom: "1px solid gray", paddingBottom: "1rem" }}>
+              <strong>ชื่อ:</strong> {item.name}<br />
+              <strong>กิจกรรม:</strong> {item.activity}<br />
+              <strong>เวลา:</strong> {new Date(item.time).toLocaleString()}<br />
+              <strong>สถานะ:</strong>{" "}
+              <select
+                value={item.status}
+                onChange={(e) => handleStatusChange(index, e.target.value)}
+              >
+                <option value="รอตรวจสอบ">รอตรวจสอบ</option>
+                <option value="อนุมัติแล้ว">อนุมัติแล้ว</option>
+                <option value="ไม่อนุมัติ">ไม่อนุมัติ</option>
+              </select>
+              {item.image && (
+                <div style={{ marginTop: "0.5rem" }}>
+                  <img src={item.image} alt="uploaded" width={200} />
+                </div>
+              )}
+            </li>
+          ))}
+        </ul>
       )}
     </div>
   );

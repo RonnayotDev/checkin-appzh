@@ -1,44 +1,62 @@
-'use client';
+"use client";
 
 import { useState } from 'react';
 import Head from 'next/head';
-import Link from 'next/link'; // ✅ ใช้ Link สำหรับ client-side navigation
-import styles from './styles/Home.module.css'; // ตรวจสอบว่าไฟล์นี้มีอยู่จริง
+import styles from './styles/Home.module.css';
+
+const USERS = [
+  "Panda Introvertboy",
+  "Autswin Aftershock",
+  "ART Charlotte",
+  "Foy Cyril",
+  "Hime Barbatos",
+  "Dave Barbatos",
+  "Beta Overdose",
+  "Cherbi Kouzen",
+  "Momo Barbatos",
+  "Argo Baker",
+  "Porch Phetkasem",
+  "Jackie Notperfect",
+  "Minnie Classic",
+  "Leon Classic",
+  "Pad Ravenwood",
+  "Maboo Monstar",
+  "Teddy Teletla",
+  "Sickboy PhetKasem",
+  "Justwyn Justwyn",
+  "Itar Phetkasem",
+];
 
 export default function CheckinForm() {
-  const [name, setName] = useState('');
+  const [name, setName] = useState(USERS[0]);
   const [activity, setActivity] = useState('');
   const [image, setImage] = useState<File | null>(null);
   const [status, setStatus] = useState('รอตรวจสอบ');
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     if (!image) {
-      alert('กรุณาเลือกรูปภาพก่อนส่ง');
+      alert("กรุณาเลือกรูปภาพก่อนส่ง");
       return;
     }
 
-    const webhookUrl =
-      'https://discord.com/api/webhooks/1400046836131299348/j2g_XnSCSQotXrbQsngY4pKFIFL5wMjetjqCShnugMYijMzcts3imUuo-QwAKPkyd3iD';
-
+    const webhookUrl = "https://discord.com/api/webhooks/1400046836131299348/j2g_XnSCSQotXrbQsngY4pKFIFL5wMjetjqCShnugMYijMzcts3imUuo-QwAKPkyd3iD";
     const formData = new FormData();
-    formData.append('file', image);
+    formData.append("file", image);
     formData.append(
-      'payload_json',
+      "payload_json",
       JSON.stringify({
         content: `📋 Check-in ใหม่จาก ${name}\nกิจกรรม: ${activity}\nสถานะ: ${status}`,
       })
     );
 
     await fetch(webhookUrl, {
-      method: 'POST',
+      method: "POST",
       body: formData,
     });
 
-    alert('ส่งข้อมูลเรียบร้อยแล้ว!');
-
-    const existingData = JSON.parse(localStorage.getItem('checkins') || '[]');
+    alert("ส่งข้อมูลเรียบร้อยแล้ว!");
+    const existingData = JSON.parse(localStorage.getItem("checkins") || "[]");
     const newData = {
       name,
       activity,
@@ -46,13 +64,11 @@ export default function CheckinForm() {
       image: URL.createObjectURL(image),
       time: new Date().toISOString(),
     };
-    localStorage.setItem('checkins', JSON.stringify([newData, ...existingData]));
+    localStorage.setItem("checkins", JSON.stringify([newData, ...existingData]));
 
-    // รีเซ็ตฟอร์ม
-    setName('');
-    setActivity('');
+    setActivity("");
     setImage(null);
-    setStatus('รอตรวจสอบ');
+    setStatus("รอตรวจสอบ");
   };
 
   return (
@@ -66,12 +82,11 @@ export default function CheckinForm() {
 
         <form onSubmit={handleSubmit} className={styles.form}>
           <label>ชื่อผู้ใช้</label>
-          <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            required
-          />
+          <select value={name} onChange={(e) => setName(e.target.value)}>
+            {USERS.map((user) => (
+              <option key={user}>{user}</option>
+            ))}
+          </select>
 
           <label>กิจกรรม</label>
           <input
@@ -95,10 +110,7 @@ export default function CheckinForm() {
           />
 
           <label>สถานะ</label>
-          <select
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
-          >
+          <select value={status} onChange={(e) => setStatus(e.target.value)}>
             <option>รอตรวจสอบ</option>
             <option>อนุมัติแล้ว</option>
             <option>ไม่อนุมัติ</option>
@@ -107,21 +119,18 @@ export default function CheckinForm() {
           <button type="submit">📤 ส่งข้อมูล Check-in</button>
         </form>
 
-        <div style={{ marginTop: '1rem' }}>
-          <Link
-            href="/history"
-            style={{ color: '#facc15', display: 'inline-block', marginRight: '1rem' }}
-          >
-            ประวัติการ Check-in →
-          </Link>
-
-          <Link
-            href="/admin"
-            style={{ color: '#facc15', display: 'inline-block' }}
-          >
-            เข้าสู่ระบบ Admin →
-          </Link>
-        </div>
+        <a
+          href={`/history?user=${encodeURIComponent(name)}`}
+          style={{ color: "#facc15", marginTop: "1rem", display: "inline-block" }}
+        >
+          ประวัติการ Check-in →
+        </a>
+        <a
+          href="/admin"
+          style={{ color: "#facc15", marginTop: "1rem", display: "inline-block" }}
+        >
+          เข้าสู่ระบบ Admin →
+        </a>
       </main>
     </div>
   );

@@ -35,6 +35,16 @@ export default function CheckinForm() {
   });
 
   alert("ส่งข้อมูลเรียบร้อยแล้ว!");
+  const existingData = JSON.parse(localStorage.getItem("checkins") || "[]");
+const newData = {
+  name,
+  activity,
+  status,
+  image: URL.createObjectURL(image), // เก็บ URL ของภาพ
+  time: new Date().toISOString(),
+};
+localStorage.setItem("checkins", JSON.stringify([newData, ...existingData]));
+
   setName("");
   setActivity("");
   setImage(null);
@@ -98,3 +108,7 @@ export default function CheckinForm() {
     </div>
   );
 }
+<a href="/history" style={{ color: "#4ade80", marginTop: "1rem", display: "inline-block" }}>
+  ดูประวัติการ Check-in →
+</a>
+
